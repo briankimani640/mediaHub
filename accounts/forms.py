@@ -1,48 +1,49 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm,PasswordResetForm
 from .models import User
-
-# Registration Form
-
+# registration form 
 class UserRegistrationForm(UserCreationForm):
-    email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'class':'form-control', 'placeholder' : 'Email'}))
-    user_type = forms.ChoiceField(choices=User.USER_TYPE_CHOICES, widget=forms.Select(attrs={'class' : 'form-control'}))
+    email = forms.EmailField(required=True, widget=forms.EmailInput(attrs= { 'class':'form-control',
+                                                                      'placeholder':'Email'}))
+    user_type = forms.ChoiceField(choices=User.USER_TYPE_CHOICES, widget=forms.Select(attrs={
+        'class' : 'form-control'
+    }))
+    
     class Meta:
-        Model = User
-        fields = ('username', 'email', 'user_type', 'password1' 'password2') # simply the form fields my user fill
+        model = User 
+        fields = ('username', 'email', 'user_type', 'password1', 'password2') # simply the form fields my user will fill
         widgets = {
             'username' : forms.TextInput(attrs={
-                'class' : 'form-control',
+                'class': 'form-control',
                 'placeholder' : 'Username'
             })
-
         }
-
+        
     # passwords
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['password1'].widgets.attrs.update({'class' : 'form-control', 'placeholder' : 'password'})
-        self.fields['password2'].widgets.attrs.update({'class' : 'form-control', 'placeholder' : 'Confirm password'})
-
-# Login Form
+        self.fields['password1'].widget.attrs.update({'class' : 'form-control', 'placeholder' : 'password'})
+        self.fields['password2'].widget.attrs.update({'class':'form-control', 'placeholder': 'Confirm Password'})
+        
+# login form 
 class UserLoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={
-        'class' : 'form-control',
+        'class':'form-control',
         'placeholder' : 'Username'
     }))
-    password = forms.CharField(widget=forms.TextInput(attrs={
+    
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
         'class' : 'form-control',
         'placeholder' : 'password'
     }))
-
-# Profle form
+    
+# profile form : update on account profile 
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('username', 'email', 'bio', 'profile_image')
+        fields = ('username','email','bio','profile_image')
         widgets = {
             'username' : forms.TextInput(attrs={'class' : 'form-control'}),
-            'email' : forms.TextInput(attrs={'class' : 'form-control'}),
-            'bio' : forms.Textarea(attrs={'class' : 'form-control', 'rows' : 3})
+            'email' :forms.TextInput(attrs={'class' : 'form-control'}),
+            'bio' :forms.Textarea(attrs={'class' : 'form-control', 'rows' : 3})
         }
-                        
